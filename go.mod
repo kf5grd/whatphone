@@ -1,3 +1,3 @@
-module samhofi.us/x/everyoneapi
+module samhofi.us/x/whatphone
 
 go 1.14

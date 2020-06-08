@@ -1,4 +1,4 @@
-package everyoneapi // import "samhofi.us/x/everyoneapi"
+package whatphone // import "samhofi.us/x/whatphone"
 
 import (
 	"bytes"
