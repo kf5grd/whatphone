@@ -38,6 +38,7 @@ func run(args []string, stdout io.Writer) error {
 			{
 				Name:      "lookup",
 				Usage:     "Perform a phone number lookup",
+				UsageText: "Perform a phone number lookup. If no data points are enabled, all data points will be requested.",
 				Action:    cmdLookup,
 				ArgsUsage: "<phone number>",
 				Flags: []cli.Flag{
@@ -47,6 +48,61 @@ func run(args []string, stdout io.Writer) error {
 						Aliases: []string{"j"},
 						Usage:   "Output JSON data",
 						Hidden:  true,
+					},
+					&cli.BoolFlag{
+						Name:    "name",
+						Aliases: []string{"n"},
+						Usage:   "Request name data",
+					},
+					&cli.BoolFlag{
+						Name:    "profile",
+						Aliases: []string{"p"},
+						Usage:   "Request profile data",
+					},
+					&cli.BoolFlag{
+						Name:    "cnam",
+						Aliases: []string{"i"},
+						Usage:   "Request CNAM data",
+					},
+					&cli.BoolFlag{
+						Name:    "gender",
+						Aliases: []string{"g"},
+						Usage:   "Request gender data",
+					},
+					&cli.BoolFlag{
+						Name:    "image",
+						Aliases: []string{"m"},
+						Usage:   "Request image data",
+					},
+					&cli.BoolFlag{
+						Name:    "address",
+						Aliases: []string{"a"},
+						Usage:   "Request address data",
+					},
+					&cli.BoolFlag{
+						Name:    "location",
+						Aliases: []string{"l"},
+						Usage:   "Request location data",
+					},
+					&cli.BoolFlag{
+						Name:    "line-provider",
+						Aliases: []string{"r"},
+						Usage:   "Request line provider data",
+					},
+					&cli.BoolFlag{
+						Name:    "carrier",
+						Aliases: []string{"c"},
+						Usage:   "Request carrier data",
+					},
+					&cli.BoolFlag{
+						Name:    "original-carrier",
+						Aliases: []string{"o"},
+						Usage:   "Request original carrier data",
+					},
+					&cli.BoolFlag{
+						Name:    "linetype",
+						Aliases: []string{"t"},
+						Usage:   "Request linetype data",
 					},
 				},
 			},
