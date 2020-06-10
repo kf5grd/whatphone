@@ -36,7 +36,6 @@ func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 	req.SetBasicAuth(a.AccountSID, a.AuthToken)
 
 	resp, err := client.Do(req)
@@ -46,7 +45,7 @@ func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("Error: %s", resp.Status)
+		return nil, fmt.Errorf("%s", resp.Status)
 	}
 
 	var ret Result
