@@ -13,7 +13,7 @@ import (
 
 const (
 	// Current version string
-	version = "0.1.2"
+	version = "0.1.3"
 
 	// Exit code on failure
 	exitFail = 1
