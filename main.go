@@ -42,9 +42,11 @@ func run(args []string, stdout io.Writer) error {
 				ArgsUsage: "<phone number>",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
+						// TODO: implement this
 						Name:    "json",
 						Aliases: []string{"j"},
 						Usage:   "Output JSON data",
+						Hidden:  true,
 					},
 				},
 			},
