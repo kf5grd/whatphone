@@ -163,6 +163,9 @@ func cmdInit(c *cli.Context) error {
 func cmdLookup(c *cli.Context) error {
 	config, err := readConfig()
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("unable to read config; you may need to run the init command")
+		}
 		return err
 	}
 
