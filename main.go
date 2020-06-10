@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v2"
-	whatphone "samhofi.us/x/whatphone/api"
+	whatphone "samhofi.us/x/whatphone/pkg/api"
 )
 
 const (
