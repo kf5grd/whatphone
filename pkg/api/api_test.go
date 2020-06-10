@@ -1,4 +1,4 @@
-package whatphone // import "samhofi.us/x/whatphone"
+package whatphone // import "samhofi.us/x/whatphone/pkg/api"
 
 import (
 	"testing"
