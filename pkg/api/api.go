@@ -45,7 +45,7 @@ func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("Error: %s", resp.Status)
+		return nil, fmt.Errorf("%s", resp.Status)
 	}
 
 	var ret Result
