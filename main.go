@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 	whatphone "samhofi.us/x/whatphone/pkg/api"
@@ -48,6 +49,11 @@ func run(args []string, stdout io.Writer) error {
 						Aliases: []string{"j"},
 						Usage:   "Output JSON data",
 						Hidden:  true,
+					},
+					&cli.BoolFlag{
+						Name:    "pricing-breakdown",
+						Aliases: []string{"b"},
+						Usage:   "Include pricing breakdown of request",
 					},
 					&cli.BoolFlag{
 						Name:    "name",
@@ -175,6 +181,115 @@ func cmdLookup(c *cli.Context) error {
 
 	if c.NArg() < 1 {
 		return fmt.Errorf("missing phone number")
+	}
+
+	opts := make([]whatphone.Option, 0)
+	if c.Bool("name") {
+		opts = append(opts, whatphone.WithName())
+	}
+	if c.Bool("profile") {
+		opts = append(opts, whatphone.WithProfile())
+	}
+	if c.Bool("cnam") {
+		opts = append(opts, whatphone.WithCNAM())
+	}
+	if c.Bool("gender") {
+		opts = append(opts, whatphone.WithGender())
+	}
+	if c.Bool("image") {
+		opts = append(opts, whatphone.WithImage())
+	}
+	if c.Bool("address") {
+		opts = append(opts, whatphone.WithAddress())
+	}
+	if c.Bool("location") {
+		opts = append(opts, whatphone.WithLocation())
+	}
+	if c.Bool("line-provider") {
+		opts = append(opts, whatphone.WithLineProvider())
+	}
+	if c.Bool("carrier") {
+		opts = append(opts, whatphone.WithCarrier())
+	}
+	if c.Bool("original-carrier") {
+		opts = append(opts, whatphone.WithOriginalCarrier())
+	}
+	if c.Bool("linetype") {
+		opts = append(opts, whatphone.WithLineType())
+	}
+
+	phonenumber := c.Args().Get(0)
+	result, err := config.Lookup(phonenumber, opts...)
+	if err != nil {
+		return err
+	}
+
+	if result.Data.Name != nil {
+		fmt.Printf("Name: %s\n", *result.Data.Name)
+	}
+	if result.Data.Profile != nil {
+		profile := *result.Data.Profile
+		fmt.Printf("Profile:\n")
+		fmt.Printf("  Edu: %s\n  Job: %s\n  Relationship: %s\n", profile.Edu, profile.Job, profile.Relationship)
+	}
+	if result.Data.Cnam != nil {
+		fmt.Printf("CNAM: %s\n", *result.Data.Cnam)
+	}
+	if result.Data.Gender != nil {
+		fmt.Printf("Gender: %s\n", *result.Data.Gender)
+	}
+	if result.Data.Image != nil {
+		image := *result.Data.Image
+		fmt.Printf("Image:\n")
+		fmt.Printf("  Cover: %s\n  Small: %s\n  Medium: %s\n  Large: %s\n", image.Cover, image.Small, image.Med, image.Large)
+	}
+	if result.Data.Address != nil {
+		fmt.Printf("Address: %s\n", *result.Data.Address)
+	}
+	if result.Data.Location != nil {
+		location := *result.Data.Location
+		fmt.Printf("Location:\n")
+		fmt.Printf("  City, State, Zip: %s, %s, %s\n", location.City, location.State, location.Zip)
+		fmt.Printf("  Lat, Long: %s, %s\n", location.Geo.Latitude, location.Geo.Longitude)
+	}
+	if result.Data.LineProvider != nil {
+		lineprovider := *result.Data.LineProvider
+		fmt.Printf("Line Provider:\n")
+		fmt.Printf("  ID: %s\n  Name: %s\n  MMS E-mail: %s\n  SMS E-mail: %s\n", lineprovider.ID, lineprovider.Name, lineprovider.MmsEmail, lineprovider.SmsEmail)
+	}
+	if result.Data.Carrier != nil {
+		carrier := *result.Data.Carrier
+		fmt.Printf("Carrier:\n")
+		fmt.Printf("  ID: %s\n  Name: %s\n", carrier.ID, carrier.Name)
+	}
+	if result.Data.CarrierO != nil {
+		carriero := *result.Data.CarrierO
+		fmt.Printf("Original Carrier:\n")
+		fmt.Printf("  ID: %s\n  Name: %s\n", carriero.ID, carriero.Name)
+	}
+	if result.Data.Linetype != nil {
+		fmt.Printf("Linetype: %s\n", *result.Data.Linetype)
+	}
+	if result.Note != "" {
+		fmt.Printf("Note: %s\n", result.Note)
+	}
+	fmt.Printf("Price Total: %.4f\n", result.Pricing.Total)
+	if c.Bool("pricing-breakdown") {
+		fmt.Printf("  Name: %.4f\n", result.Pricing.Breakdown.Name)
+		fmt.Printf("  Profile: %.4f\n", result.Pricing.Breakdown.Profile)
+		fmt.Printf("  CNAM: %.4f\n", result.Pricing.Breakdown.Cnam)
+		fmt.Printf("  Gender: %.4f\n", result.Pricing.Breakdown.Gender)
+		fmt.Printf("  Image: %.4f\n", result.Pricing.Breakdown.Image)
+		fmt.Printf("  Address: %.4f\n", result.Pricing.Breakdown.Address)
+		fmt.Printf("  Location: %.4f\n", result.Pricing.Breakdown.Location)
+		fmt.Printf("  Line Provider: %.4f\n", result.Pricing.Breakdown.LineProvider)
+		fmt.Printf("  Carrier: %.4f\n", result.Pricing.Breakdown.Carrier)
+		fmt.Printf("  Original Carrier: %.4f\n", result.Pricing.Breakdown.Carrier0)
+		fmt.Printf("  Linetype: %.4f\n", result.Pricing.Breakdown.Linetype)
+	}
+
+	if len(result.Missed) > 0 {
+		fmt.Printf("\nMissed: %s\n", strings.Join(result.Missed, ", "))
 	}
 
 	return nil
