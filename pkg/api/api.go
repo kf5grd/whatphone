@@ -36,7 +36,6 @@ func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 	req.SetBasicAuth(a.AccountSID, a.AuthToken)
 
 	resp, err := client.Do(req)
