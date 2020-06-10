@@ -1,4 +1,4 @@
-package everyoneapi // import "samhofi.us/x/everyoneapi"
+package whatphone // import "samhofi.us/x/whatphone"
 
 // API holds everyoneapi authentication information
 type API struct {
@@ -6,48 +6,88 @@ type API struct {
 	AuthToken  string
 }
 
-func NameField(f *[]string) {
-	*f = append(*f, "name")
+// fields holds a list of fields to request from the API
+type fields []string
+
+// Option adds a field to the list of fields being requested from the API.
+// See "Data Points" section at https://www.everyoneapi.com/docs for more info
+type Option func(f *fields)
+
+// WithName adds the "name" field to the list of fields being requested from the API
+func WithName() Option {
+	return func(f *fields) {
+		*f = append(*f, "name")
+	}
 }
 
-func ProfileField(f *[]string) {
-	*f = append(*f, "profile")
+// WithProfile adds the "profile" field to the list of fields being requested from the API
+func WithProfile() Option {
+	return func(f *fields) {
+		*f = append(*f, "profile")
+	}
 }
 
-func CNAMField(f *[]string) {
-	*f = append(*f, "cnam")
+// WithCNAM adds the "cnam" field to the list of fields being requested from the API
+func WithCNAM() Option {
+	return func(f *fields) {
+		*f = append(*f, "cnam")
+	}
 }
 
-func GenderField(f *[]string) {
-	*f = append(*f, "gender")
+// WithGender adds the "gender" field to the list of fields being requested from the API
+func WithGender() Option {
+	return func(f *fields) {
+		*f = append(*f, "gender")
+	}
 }
 
-func ImageField(f *[]string) {
-	*f = append(*f, "image")
+// WithImage adds the "image" field to the list of fields being requested from the API
+func WithImage() Option {
+	return func(f *fields) {
+		*f = append(*f, "image")
+	}
 }
 
-func AddressField(f *[]string) {
-	*f = append(*f, "address")
+// WithAddress adds the "address" field to the list of fields being requested from the API
+func WithAddress() Option {
+	return func(f *fields) {
+		*f = append(*f, "address")
+	}
 }
 
-func LocationField(f *[]string) {
-	*f = append(*f, "location")
+// WithLocation adds the "location" field to the list of fields being requested from the API
+func WithLocation() Option {
+	return func(f *fields) {
+		*f = append(*f, "location")
+	}
 }
 
-func LineProviderField(f *[]string) {
-	*f = append(*f, "line_provider")
+// WithLineProvider adds the "line_provider" field to the list of fields being requested from the API
+func WithLineProvider() Option {
+	return func(f *fields) {
+		*f = append(*f, "line_provider")
+	}
 }
 
-func CarrierField(f *[]string) {
-	*f = append(*f, "carrier")
+// WithCarrier adds the "carrier" field to the list of fields being requested from the API
+func WithCarrier() Option {
+	return func(f *fields) {
+		*f = append(*f, "carrier")
+	}
 }
 
-func OriginalCarrierField(f *[]string) {
-	*f = append(*f, "carrier_o")
+// WithOriginalcarrier adds the "carrier_o" field to the list of fields being requested from the API
+func WithOriginalCarrier() Option {
+	return func(f *fields) {
+		*f = append(*f, "carrier_o")
+	}
 }
 
-func LineTypeField(f *[]string) {
-	*f = append(*f, "line_type")
+// WithLineType adds the "line_type" field to the list of fields being requested from the API
+func WithLineType() Option {
+	return func(f *fields) {
+		*f = append(*f, "line_type")
+	}
 }
 
 // Result holds the results of a phone number lookup

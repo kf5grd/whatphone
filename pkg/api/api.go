@@ -1,4 +1,4 @@
-package everyoneapi // import "samhofi.us/x/everyoneapi"
+package whatphone // import "samhofi.us/x/whatphone"
 
 import (
 	"bytes"
@@ -22,14 +22,14 @@ func New(accountsid string, authtoken string) *API {
 }
 
 // Lookup performs a phone number lookup and returns the Result
-func (a *API) Lookup(phonenumber string, fields ...func(*[]string)) (*Result, error) {
-	f := make([]string, 0)
-	for _, field := range fields {
-		field(&f)
+func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
+	f := new(fields)
+	for _, opt := range opts {
+		opt(f)
 	}
 
 	data := url.Values{}
-	data.Set("data", strings.Join(f, ","))
+	data.Set("data", strings.Join(*f, ","))
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", baseurl+phonenumber, bytes.NewBufferString(data.Encode()))

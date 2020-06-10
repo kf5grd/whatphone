@@ -1,4 +1,4 @@
-package everyoneapi // import "samhofi.us/x/everyoneapi"
+package whatphone // import "samhofi.us/x/whatphone"
 
 import (
 	"testing"
@@ -21,7 +21,7 @@ func TestSingleField(t *testing.T) {
 	expandedname := ExpandedName{First: "Michael", Last: "Seaver"}
 
 	api := New("test", "test")
-	res, err := api.Lookup("+15551234567", NameField)
+	res, err := api.Lookup("+15551234567", WithName())
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
