@@ -1,11 +1,9 @@
 package whatphone // import "samhofi.us/x/whatphone/pkg/api"
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 )
 
@@ -28,15 +26,16 @@ func (a *API) Lookup(phonenumber string, opts ...Option) (*Result, error) {
 		opt(f)
 	}
 
-	data := url.Values{}
-	data.Set("data", strings.Join(*f, ","))
+	var data string
+	if len(*f) > 0 {
+		data = fmt.Sprintf("?data=%s", strings.Join(*f, ","))
+	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", baseurl+phonenumber, bytes.NewBufferString(data.Encode()))
+	req, err := http.NewRequest(http.MethodGet, baseurl+phonenumber+data, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 	req.SetBasicAuth(a.AccountSID, a.AuthToken)
 
 	resp, err := client.Do(req)
