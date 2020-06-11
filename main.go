@@ -39,7 +39,6 @@ func run(args []string, stdout io.Writer) error {
 			{
 				Name:      "lookup",
 				Usage:     "Perform a phone number lookup",
-				UsageText: "Perform a phone number lookup. If no data points are enabled, all data points will be requested.",
 				Action:    cmdLookup,
 				ArgsUsage: "<phone number>",
 				Flags: []cli.Flag{
@@ -54,6 +53,10 @@ func run(args []string, stdout io.Writer) error {
 						Name:    "pricing-breakdown",
 						Aliases: []string{"b"},
 						Usage:   "Include pricing breakdown of request",
+					},
+					&cli.BoolFlag{
+						Name:  "all",
+						Usage: "Request all data points",
 					},
 					&cli.BoolFlag{
 						Name:    "name",
@@ -216,6 +219,10 @@ func cmdLookup(c *cli.Context) error {
 	}
 	if c.Bool("linetype") {
 		opts = append(opts, whatphone.WithLineType())
+	}
+
+	if len(opts) == 0 && !c.Bool("all") {
+		return fmt.Errorf("no data points selected; use --all to request all data points")
 	}
 
 	phonenumber := c.Args().Get(0)
