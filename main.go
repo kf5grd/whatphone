@@ -19,14 +19,26 @@ const (
 	exitFail = 1
 )
 
+type configFunc func() (*whatphone.API, error)
+
+type configReader struct {
+	reader configFunc
+}
+
+func newConfigReader(f configFunc) configReader {
+	return configReader{
+		reader: f,
+	}
+}
+
 func main() {
-	if err := run(os.Args, os.Stdout); err != nil {
+	if err := run(os.Args, os.Stdout, newConfigReader(readConfig)); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(exitFail)
 	}
 }
 
-func run(args []string, stdout io.Writer) error {
+func run(args []string, stdout io.Writer, cr configReader) error {
 	app := cli.App{
 		Name:                   "WhatPhone",
 		HelpName:               "whatphone",
@@ -34,6 +46,7 @@ func run(args []string, stdout io.Writer) error {
 		UseShortOptionHandling: true,
 		Writer:                 stdout,
 		Version:                version,
+		Metadata:               map[string]interface{}{"configReader": cr},
 
 		Commands: []*cli.Command{
 			{
@@ -170,7 +183,10 @@ func cmdInit(c *cli.Context) error {
 }
 
 func cmdLookup(c *cli.Context) error {
-	config, err := readConfig()
+	cr := c.App.Metadata["configReader"].(configReader)
+	reader := cr.reader
+	config, err := reader()
+
 	if err != nil {
 		if os.IsNotExist(err) {
 			return fmt.Errorf("unable to read config; you may need to run the init command")
