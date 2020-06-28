@@ -3,8 +3,11 @@ kind: pipeline
 type: docker
 name: default
 
+platform:
+  arch: arm64
+  os: linux
+
 steps:
-- name: test
   image: golang
   commands:
   - go vet
